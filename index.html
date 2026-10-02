@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Scene BGM</title>
+  <meta name="description" content="フリーBGMを場面・雰囲気から選んで連続再生するプレイヤー">
+  <meta name="theme-color" content="#0f1115">
+  <script>
+    // テーマ適用を描画前に行い、ちらつきを防ぐ
+    try {
+      const s = JSON.parse(localStorage.getItem('sbgm.settings') || '{}');
+      if (s.theme === 'light' || s.theme === 'dark') document.documentElement.dataset.theme = s.theme;
+    } catch {}
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        <span>Scene BGM</span>
+      </div>
+      <button class="icon-btn" id="themeBtn" aria-label="テーマ切り替え" title="テーマ切り替え"></button>
+    </header>
+
+    <section class="player" id="player">
+      <div class="video">
+        <div id="yt"></div>
+        <div class="video-empty" id="videoEmpty">
+          <p>場面を選ぶとすぐに再生が始まります</p>
+        </div>
+      </div>
+      <div class="now">
+        <div class="now-text">
+          <div class="now-title" id="nowTitle">—</div>
+          <div class="now-sub" id="nowSub"></div>
+        </div>
+        <button class="icon-btn fav" id="nowFav" aria-label="お気に入り"></button>
+      </div>
+      <div class="now-tags" id="nowTags"></div>
+      <div class="seek">
+        <span id="tCur">0:00</span>
+        <input type="range" id="seek" min="0" max="1000" value="0" aria-label="再生位置">
+        <span id="tDur">0:00</span>
+      </div>
+      <div class="controls">
+        <button class="icon-btn" id="shuffleBtn" aria-label="シャッフル"></button>
+        <button class="icon-btn big" id="prevBtn" aria-label="前の曲"></button>
+        <button class="play-btn" id="playBtn" aria-label="再生/一時停止"></button>
+        <button class="icon-btn big" id="nextBtn" aria-label="次の曲"></button>
+        <button class="icon-btn" id="repeatBtn" aria-label="リピート"></button>
+      </div>
+      <div class="now-actions">
+        <button class="pill" id="similarBtn">この曲に似た曲を流す</button>
+        <a class="credit" id="credit" target="_blank" rel="noopener"></a>
+      </div>
+    </section>
+
+    <main class="panel">
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-tab="search">さがす</button>
+        <button role="tab" data-tab="queue">キュー</button>
+        <button role="tab" data-tab="history">履歴</button>
+        <button role="tab" data-tab="favs">お気に入り</button>
+      </nav>
+      <div id="view"></div>
+    </main>
+
+    <footer class="footer">
+      楽曲：<a href="https://maou.audio/" target="_blank" rel="noopener">魔王魂</a>（YouTube公式動画を埋め込み再生）
+    </footer>
+  </div>
+
+  <div class="mini" id="mini" hidden>
+    <button class="mini-text" id="miniText"></button>
+    <button class="icon-btn fav" id="miniFav" aria-label="お気に入り"></button>
+    <button class="icon-btn" id="miniPlay" aria-label="再生/一時停止"></button>
+    <button class="icon-btn" id="miniNext" aria-label="次の曲"></button>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="importDlg">
+    <form method="dialog" class="dlg">
+      <h3>お気に入りを読み込む</h3>
+      <p class="muted">書き出したJSONファイルを選ぶか、内容を貼り付けてください。今のお気に入りに追加されます。</p>
+      <input type="file" id="importFile" accept="application/json,.json">
+      <textarea id="importText" rows="5" placeholder='{"favs":[...]}'></textarea>
+      <div class="dlg-actions">
+        <button value="cancel" class="pill ghost">キャンセル</button>
+        <button value="ok" class="pill primary" id="importOk">読み込む</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
