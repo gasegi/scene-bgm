@@ -80,6 +80,9 @@ const GENRES = ['ロック', 'メタル', 'ポップ', 'ジャズ', 'クラシ�
   'チップチューン', '8bit', 'エレクトロニカ', 'Lo-Fi', 'ローファイ', 'ワルツ', 'マーチ', 'ブルース', 'カントリー', 'フォーク', 'デジタル', 'サイバー'];
 const TEMPOS = ['遅い', 'ゆっくり', '普通の速さ', '軽快', '速い', '一部速い', '鈍重'];
 
+// サイトごとの曲ページURLの組み立て（データには曲IDだけを持たせる）
+const URL_BASE = { opentracks: 'https://opentracks.com/bgm/detail/' };
+
 const PARSERS = {
   opentracks(v) {
     const d = v.description;
@@ -88,11 +91,14 @@ const PARSERS = {
     const name = d.match(/フリーBGM「(.+?)」/)?.[1] ?? v.title.split('｜')[0].trim();
     const variant = v.title.split('｜')[0].match(/#(\d+)\s*$/)?.[1];
     const composer = d.match(/作（編）曲\s*[：:]\s*(.+)/)?.[1]?.trim() ?? '';
-    const kwLine = d.match(/キーワード\s*=\s*\n(.+)/)?.[1] ?? '';
+    // キーワード行が空の動画では次の段落を拾ってしまうので、文章らしい行は捨てる
+    let kwLine = d.match(/キーワード\s*=\s*\n(.+)/)?.[1] ?? '';
+    if (kwLine.includes('。')) kwLine = '';
     // 半角カナ等を全角に揃える（ｱｺｰｽﾃｨｯｸ → アコースティック）
     const tags = [...new Set(kwLine.normalize('NFKC').split(',').map((s) => s.trim()).filter(Boolean))];
     const track = detail[2] ? +detail[2] : 1;
     return {
+      key: detail[1],
       id: `ot_${detail[1]}${track > 1 ? `_${track}` : ''}`,
       group: `ot_${detail[1]}`,
       title: name,
@@ -105,6 +111,34 @@ const PARSERS = {
     };
   },
 };
+
+// 転送量を抑えるため、別バージョンは除き、タグ・作曲者は語彙表への番号で持つ。
+// tracks の各要素: [曲ID, 曲名, 作曲者番号, YouTube ID, 秒数, 公開日, タグ番号[], ジャンル番号, テンポ番号]（該当なしは -1）
+function compact(src, tracks) {
+  const vocab = [];
+  const composers = [];
+  const index = (list, v) => {
+    if (!v) return -1;
+    let i = list.indexOf(v);
+    if (i < 0) i = list.push(v) - 1;
+    return i;
+  };
+  return {
+    format: 2,
+    source: src.name,
+    site: src.site,
+    idPrefix: 'ot_',
+    urlBase: URL_BASE[src.parser],
+    builtAt: new Date().toISOString(),
+    partial: RSS,
+    vocab,
+    composers,
+    tracks: tracks.map((t) => [
+      t.key, t.title, index(composers, t.composer), t.yt, t.seconds, t.publishedAt.slice(0, 10),
+      t.tags.map((x) => index(vocab, x)), index(vocab, t.genre === 'その他' ? '' : t.genre), index(vocab, t.tempo),
+    ]),
+  };
+}
 
 // ---------- 実行 ----------
 if (!RSS && !KEY) {
@@ -128,10 +162,7 @@ for (const src of sources) {
     const g = byGroup.get(t.group);
     if (!g || t.id.length < g.id.length) byGroup.set(t.group, t);
   }
-  for (const t of tracks) t.primary = byGroup.get(t.group) === t;
-  tracks.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-
-  const out = { source: src.name, site: src.site, builtAt: new Date().toISOString(), partial: RSS, tracks };
-  await writeFile(dataUrl(`${src.key}.json`), JSON.stringify(out));
+  const primary = [...byGroup.values()].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  await writeFile(dataUrl(`${src.key}.json`), JSON.stringify(compact(src, primary)));
   console.log(`${src.key}: ${tracks.length}曲（代表 ${byGroup.size}曲）, 除外 ${skipped}件${RSS ? ' [RSS:最新分のみ]' : ''}`);
 }

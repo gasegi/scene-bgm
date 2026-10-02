@@ -48,17 +48,17 @@ const SCENES = [
   { key: 'sad', name: '切ない・感動', c: ['#6a8dff', '#8457d6'], tags: ['切ない', '悲しみ', '悲しい', '別れ', '寂しい', '回想', '夕日', '懐かしい', '感動'], kw: ['切な', '悲し', '感動', '泣'] },
   { key: 'tense', name: '緊張・シリアス', c: ['#4b5563', '#1f2937'], tags: ['推理', '探偵', '悪の組織', '暗い', '苦悩', '緊張感', '緊迫', '怪しい', '不安'], kw: ['緊張', '緊迫', 'シリアス', '厳戒', '不安'] },
   { key: 'battle', name: 'バトル・熱い', c: ['#ef4444', '#991b1b'], tags: ['戦闘曲', 'メタル', 'ラウド', 'アクション', '激しい', '力強い', '情熱', 'かっこいい'], kw: ['バトル', '戦闘', '熱い', '激し'] },
-  { key: 'epic', name: '壮大・荘厳', c: ['#c9a227', '#7a5a12'], tags: ['壮大', '荘厳', '儀式', '城', 'フルオーケストラ', '勇壮'], genres: ['オーケストラ'] },
+  { key: 'epic', need: 1, name: '壮大・荘厳', c: ['#c9a227', '#7a5a12'], tags: ['壮大', '荘厳', '儀式', '城', 'フルオーケストラ', '勇壮'], genres: ['オーケストラ'] },
   { key: 'horror', name: 'ホラー・不穏', c: ['#3f3f46', '#450a0a'], tags: ['ホラー', '不気味', '絶望', '恐ろしい', '悪意', '狂気'], kw: ['恐怖', '不穏', '怖'] },
-  { key: 'fantasy', name: '幻想・神秘', c: ['#22d3ee', '#6366f1'], tags: ['幻想的', '神秘的', 'ファンタジー'], genres: ['ファンタジー'], kw: ['幻想', '神秘'] },
-  { key: 'healing', name: '癒し・作業用', c: ['#86c5a9', '#4b8f8c'], tags: ['リラックス', 'ヒーリング', '癒し'], genres: ['ヒーリング'], kw: ['癒', 'ヒーリング'] },
+  { key: 'fantasy', need: 1, name: '幻想・神秘', c: ['#22d3ee', '#6366f1'], tags: ['幻想的', '神秘的', 'ファンタジー'], genres: ['ファンタジー'], kw: ['幻想', '神秘'] },
+  { key: 'healing', need: 1, name: '癒し・作業用', c: ['#86c5a9', '#4b8f8c'], tags: ['リラックス', 'ヒーリング', '癒し'], genres: ['ヒーリング'], kw: ['癒', 'ヒーリング'] },
   { key: 'jazz', name: 'オシャレ・ジャズ', c: ['#d4a373', '#7f5539'], tags: ['オシャレ', 'ジャズ', 'カフェ', 'お洒落', 'おしゃれ', 'ボサノバ'], kw: ['ジャズ', 'おしゃれ', 'オシャレ'] },
-  { key: 'wafu', name: '和風', c: ['#e05d5d', '#7c2d12'], tags: ['和風'], kw: ['和風', '和楽器', '江戸', '侍', '忍'] },
+  { key: 'wafu', need: 1, name: '和風', c: ['#e05d5d', '#7c2d12'], tags: ['和風'], kw: ['和風', '和楽器', '江戸', '侍', '忍'] },
   { key: 'cyber', name: 'サイバー・近未来', c: ['#06b6d4', '#7c3aed'], tags: ['未来', '宇宙', 'サイバー', 'デジタル', '近未来', 'EDM', 'テクノ'], genres: ['サイバー'] },
-  { key: 'retro', name: 'レトロゲーム', c: ['#84cc16', '#15803d'], tags: ['ピコピコ音', 'チップチューン', '8bit'], genres: ['ファミコン風'] },
-  { key: 'rock', name: 'ロック', c: ['#f97316', '#1f2937'], tags: ['ロック', 'メタル'], genres: ['ネオロック'] },
-  { key: 'piano', name: 'ピアノ', c: ['#a78bfa', '#475569'], tags: ['ピアノ'], genres: ['ピアノ'] },
-  { key: 'acoustic', name: 'アコースティック', c: ['#eab308', '#a16207'], tags: ['A.ギター'], genres: ['アコースティック'] },
+  { key: 'retro', need: 1, name: 'レトロゲーム', c: ['#84cc16', '#15803d'], tags: ['ピコピコ音', 'チップチューン', '8bit'], genres: ['ファミコン風'] },
+  { key: 'rock', need: 1, name: 'ロック', c: ['#f97316', '#1f2937'], tags: ['ロック', 'メタル'], genres: ['ネオロック'] },
+  { key: 'piano', need: 1, name: 'ピアノ', c: ['#a78bfa', '#475569'], tags: ['ピアノ'], genres: ['ピアノ'] },
+  { key: 'acoustic', need: 1, name: 'アコースティック', c: ['#eab308', '#a16207'], tags: ['A.ギター'], genres: ['アコースティック'] },
 ];
 
 // 曲の性格を表さない汎用タグ。タグ一覧や類似度計算から外す
@@ -136,6 +136,11 @@ function haystack(t) {
   return t._hay ??= [t.title, t.subtitle, t.genre, t.composer, t.tags.join(' '), t.desc].join(' ').toLowerCase();
 }
 function matchScene(t, sc) {
+  // OpenTracks のようにキーワードの多い曲は、1語だけの一致では広すぎるので sc.need 語以上を求める
+  if (t.tags.length >= 6) {
+    const hits = (sc.genres?.includes(t.genre) ? 1 : 0) + (sc.tags?.filter((x) => t.tags.includes(x)).length ?? 0);
+    return hits >= (sc.need ?? 2);
+  }
   if (sc.genres?.includes(t.genre)) return true;
   if (sc.tags?.some((x) => t.tags.includes(x))) return true;
   const text = (t.subtitle ?? '') + ' ' + (t.desc ?? '');
@@ -164,6 +169,7 @@ function similarTo(t, n = 30) {
 }
 
 // ---------- キュー操作 ----------
+const MAX_QUEUE = 200;
 function setQueue(ids, startId, { autoplay = true, label } = {}) {
   ids = ids.filter((id) => state.byId.has(id));
   if (!ids.length) return toast('再生できる曲がありません');
@@ -171,6 +177,12 @@ function setQueue(ids, startId, { autoplay = true, label } = {}) {
   if (state.settings.shuffle) {
     const rest = shuffled(items.filter((id) => id !== startId));
     items = startId ? [startId, ...rest] : rest;
+  }
+  // 数千曲の場面もあるため、キューは MAX_QUEUE 曲まで（シャッフル時は無作為に、順番再生時は選んだ曲から）
+  if (items.length > MAX_QUEUE) {
+    const from = state.settings.shuffle ? 0 : Math.max(0, items.indexOf(startId));
+    items = items.slice(from, from + MAX_QUEUE);
+    ids = ids.filter((id) => items.includes(id));
   }
   const index = startId ? Math.max(0, items.indexOf(startId)) : 0;
   state.queue = { items, orig: ids.slice(), index };
@@ -969,6 +981,25 @@ function bind() {
   }, { threshold: 0.15 }).observe($('#player'));
 }
 
+// format 2（scripts/fetch-youtube.mjs の compact）を通常の曲オブジェクトに戻す
+function expandTracks(data) {
+  if (data.format !== 2) return data.tracks;
+  const word = (i) => (i >= 0 ? data.vocab[i] : '');
+  return data.tracks.map(([key, title, composer, yt, seconds, date, tags, genre, tempo]) => ({
+    id: data.idPrefix + key,
+    title,
+    subtitle: '',
+    composer: data.composers[composer] ?? '',
+    yt,
+    seconds,
+    publishedAt: date,
+    tags: tags.map(word),
+    genre: word(genre) || 'その他',
+    tempo: word(tempo),
+    url: data.urlBase + key,
+  }));
+}
+
 function loadedSources() {
   return SOURCES.map((x) => ({ ...x, count: state.tracks.filter((t) => t.src === x.key).length })).filter((x) => x.count);
 }
@@ -983,7 +1014,7 @@ async function main() {
       const res = await fetch(src.file);
       if (!res.ok) return [];
       const data = await res.json();
-      return data.tracks.filter((t) => t.yt).map((t) => ({ ...t, src: src.key }));
+      return expandTracks(data).filter((t) => t.yt).map((t) => ({ ...t, src: src.key }));
     } catch { return []; }
   }));
   const all = loaded.flat();
