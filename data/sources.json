@@ -1,0 +1,9 @@
+[
+  {
+    "key": "opentracks",
+    "name": "OpenTracks（旧DOVA-SYNDROME）",
+    "site": "https://opentracks.com/",
+    "channelId": "UCq15_9MvmxT1r2-LLjtkokg",
+    "parser": "opentracks"
+  }
+]

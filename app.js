@@ -43,26 +43,33 @@ const ICON = {
 // ---------- 場面プリセット ----------
 // tags / genres のいずれかに当たるか、サブタイトル・説明文に kw を含めば該当
 const SCENES = [
-  { key: 'bright', name: '明るい・元気', c: ['#ff9a3c', '#ff5f6d'], tags: ['明るい', '元気', 'かわいい', '爽やか', '楽しい'], kw: ['明る', '元気', '楽し', 'ポップ'] },
-  { key: 'daily', name: 'ほのぼの日常', c: ['#5fc88f', '#2f9e8f'], tags: ['穏やか', 'カフェ', '故郷', '店内', '動物', '猫', '犬'], kw: ['ほのぼの', 'のんびり', '日常', 'ゆったり'] },
-  { key: 'sad', name: '切ない・感動', c: ['#6a8dff', '#8457d6'], tags: ['切ない', '悲しみ', '悲しい', '別れ', '寂しい', '回想', '夕日', '懐かしい'], kw: ['切な', '悲し', '感動', '泣'] },
-  { key: 'tense', name: '緊張・シリアス', c: ['#4b5563', '#1f2937'], tags: ['推理', '探偵', '悪の組織', '暗い', '苦悩'], kw: ['緊張', '緊迫', 'シリアス', '厳戒', '不安'] },
-  { key: 'battle', name: 'バトル・熱い', c: ['#ef4444', '#991b1b'], tags: ['戦闘曲', 'メタル', 'ラウド', 'アクション'], kw: ['バトル', '戦闘', '熱い', '激し'] },
-  { key: 'epic', name: '壮大・荘厳', c: ['#c9a227', '#7a5a12'], tags: ['壮大', '荘厳', '儀式', '城', 'フルオーケストラ'], genres: ['オーケストラ'] },
-  { key: 'horror', name: 'ホラー・不穏', c: ['#3f3f46', '#450a0a'], tags: ['ホラー', '不気味', '絶望'], kw: ['恐怖', '不穏', '怖'] },
-  { key: 'fantasy', name: '幻想・神秘', c: ['#22d3ee', '#6366f1'], tags: ['幻想的', '神秘的'], genres: ['ファンタジー'], kw: ['幻想', '神秘'] },
-  { key: 'healing', name: '癒し・作業用', c: ['#86c5a9', '#4b8f8c'], tags: ['リラックス'], genres: ['ヒーリング'], kw: ['癒', 'ヒーリング'] },
-  { key: 'jazz', name: 'オシャレ・ジャズ', c: ['#d4a373', '#7f5539'], tags: ['オシャレ', 'ジャズ', 'カフェ'], kw: ['ジャズ', 'おしゃれ', 'オシャレ'] },
+  { key: 'bright', name: '明るい・元気', c: ['#ff9a3c', '#ff5f6d'], tags: ['明るい', '元気', 'かわいい', '爽やか', '楽しい', 'コミカル'], kw: ['明る', '元気', '楽し', 'ポップ'] },
+  { key: 'daily', name: 'ほのぼの日常', c: ['#5fc88f', '#2f9e8f'], tags: ['穏やか', 'カフェ', '故郷', '店内', '動物', '猫', '犬', '日常', '温かい', '優しい', 'のんびり', 'ほのぼの'], kw: ['ほのぼの', 'のんびり', '日常', 'ゆったり'] },
+  { key: 'sad', name: '切ない・感動', c: ['#6a8dff', '#8457d6'], tags: ['切ない', '悲しみ', '悲しい', '別れ', '寂しい', '回想', '夕日', '懐かしい', '感動'], kw: ['切な', '悲し', '感動', '泣'] },
+  { key: 'tense', name: '緊張・シリアス', c: ['#4b5563', '#1f2937'], tags: ['推理', '探偵', '悪の組織', '暗い', '苦悩', '緊張感', '緊迫', '怪しい', '不安'], kw: ['緊張', '緊迫', 'シリアス', '厳戒', '不安'] },
+  { key: 'battle', name: 'バトル・熱い', c: ['#ef4444', '#991b1b'], tags: ['戦闘曲', 'メタル', 'ラウド', 'アクション', '激しい', '力強い', '情熱', 'かっこいい'], kw: ['バトル', '戦闘', '熱い', '激し'] },
+  { key: 'epic', name: '壮大・荘厳', c: ['#c9a227', '#7a5a12'], tags: ['壮大', '荘厳', '儀式', '城', 'フルオーケストラ', '勇壮'], genres: ['オーケストラ'] },
+  { key: 'horror', name: 'ホラー・不穏', c: ['#3f3f46', '#450a0a'], tags: ['ホラー', '不気味', '絶望', '恐ろしい', '悪意', '狂気'], kw: ['恐怖', '不穏', '怖'] },
+  { key: 'fantasy', name: '幻想・神秘', c: ['#22d3ee', '#6366f1'], tags: ['幻想的', '神秘的', 'ファンタジー'], genres: ['ファンタジー'], kw: ['幻想', '神秘'] },
+  { key: 'healing', name: '癒し・作業用', c: ['#86c5a9', '#4b8f8c'], tags: ['リラックス', 'ヒーリング', '癒し'], genres: ['ヒーリング'], kw: ['癒', 'ヒーリング'] },
+  { key: 'jazz', name: 'オシャレ・ジャズ', c: ['#d4a373', '#7f5539'], tags: ['オシャレ', 'ジャズ', 'カフェ', 'お洒落', 'おしゃれ', 'ボサノバ'], kw: ['ジャズ', 'おしゃれ', 'オシャレ'] },
   { key: 'wafu', name: '和風', c: ['#e05d5d', '#7c2d12'], tags: ['和風'], kw: ['和風', '和楽器', '江戸', '侍', '忍'] },
-  { key: 'cyber', name: 'サイバー・近未来', c: ['#06b6d4', '#7c3aed'], tags: ['未来', '宇宙'], genres: ['サイバー'] },
-  { key: 'retro', name: 'レトロゲーム', c: ['#84cc16', '#15803d'], tags: ['ピコピコ音'], genres: ['ファミコン風'] },
-  { key: 'rock', name: 'ロック', c: ['#f97316', '#1f2937'], genres: ['ネオロック'] },
-  { key: 'piano', name: 'ピアノ', c: ['#a78bfa', '#475569'], genres: ['ピアノ'] },
-  { key: 'acoustic', name: 'アコースティック', c: ['#eab308', '#a16207'], genres: ['アコースティック'] },
+  { key: 'cyber', name: 'サイバー・近未来', c: ['#06b6d4', '#7c3aed'], tags: ['未来', '宇宙', 'サイバー', 'デジタル', '近未来', 'EDM', 'テクノ'], genres: ['サイバー'] },
+  { key: 'retro', name: 'レトロゲーム', c: ['#84cc16', '#15803d'], tags: ['ピコピコ音', 'チップチューン', '8bit'], genres: ['ファミコン風'] },
+  { key: 'rock', name: 'ロック', c: ['#f97316', '#1f2937'], tags: ['ロック', 'メタル'], genres: ['ネオロック'] },
+  { key: 'piano', name: 'ピアノ', c: ['#a78bfa', '#475569'], tags: ['ピアノ'], genres: ['ピアノ'] },
+  { key: 'acoustic', name: 'アコースティック', c: ['#eab308', '#a16207'], tags: ['A.ギター'], genres: ['アコースティック'] },
 ];
 
 // 曲の性格を表さない汎用タグ。タグ一覧や類似度計算から外す
-const GENERIC_TAGS = new Set(['ゲーム', 'アニメ', 'YouTube', 'rpg', '映画・ドラマ', '古い曲', 'midi', '演劇', 'ラジオ']);
+const GENERIC_TAGS = new Set(['ゲーム', 'アニメ', 'YouTube', 'rpg', '映画・ドラマ', '古い曲', 'midi', '演劇', 'ラジオ', 'ドラマ', 'シネマ', '四拍子', '三拍子']);
+
+// ---------- 収録元 ----------
+const SOURCES = [
+  { key: 'maou', name: '魔王魂', file: 'data/maou.json', site: 'https://maou.audio/', page: (t) => `https://maou.audio/${t.id}/` },
+  { key: 'opentracks', name: 'OpenTracks', file: 'data/opentracks.json', site: 'https://opentracks.com/', page: (t) => t.url },
+];
+const sourceOf = (t) => SOURCES.find((x) => x.key === t?.src) ?? SOURCES[0];
 
 // ---------- 状態 ----------
 const state = {
@@ -72,7 +79,7 @@ const state = {
   favs: store.get('favs', []), // [{id, at}]
   history: store.get('history', []), // [{id, at}] 新しい順
   settings: Object.assign({ theme: 'auto', shuffle: true, repeat: 'all' }, store.get('settings', {})),
-  filter: { q: '', genres: new Set(), tags: new Set() },
+  filter: { q: '', genres: new Set(), tags: new Set(), srcs: new Set() },
   tab: 'search',
   shown: 50,
   tagsOpen: false,
@@ -126,23 +133,24 @@ function toast(msg) {
 
 // ---------- 検索 ----------
 function haystack(t) {
-  return t._hay ??= [t.title, t.subtitle, t.genre, t.tags.join(' '), t.desc].join(' ').toLowerCase();
+  return t._hay ??= [t.title, t.subtitle, t.genre, t.composer, t.tags.join(' '), t.desc].join(' ').toLowerCase();
 }
 function matchScene(t, sc) {
   if (sc.genres?.includes(t.genre)) return true;
   if (sc.tags?.some((x) => t.tags.includes(x))) return true;
-  const text = t.subtitle + ' ' + t.desc;
+  const text = (t.subtitle ?? '') + ' ' + (t.desc ?? '');
   return !!sc.kw?.some((k) => text.includes(k));
 }
 function filtered() {
-  const { q, genres, tags } = state.filter;
+  const { q, genres, tags, srcs } = state.filter;
   const words = q.toLowerCase().split(/[\s　]+/).filter(Boolean);
   return state.tracks.filter((t) =>
+    (!srcs.size || srcs.has(t.src)) &&
     (!genres.size || genres.has(t.genre)) &&
     (!tags.size || t.tags.some((x) => tags.has(x))) &&
     words.every((w) => haystack(t).includes(w)));
 }
-const hasFilter = () => state.filter.q.trim() || state.filter.genres.size || state.filter.tags.size;
+const hasFilter = () => state.filter.q.trim() || state.filter.genres.size || state.filter.tags.size || state.filter.srcs.size;
 
 function similarTo(t, n = 30) {
   const own = t.tags.filter((x) => !GENERIC_TAGS.has(x));
@@ -291,7 +299,7 @@ function cycleVote(id, key) {
 function unsentItems() {
   return Object.entries(state.curation)
     .filter(([, c]) => isUnsent(c))
-    .map(([id, c]) => ({ id, src: 'maou', title: state.byId.get(id)?.title, scenes: c.s, memo: c.memo?.trim() || undefined, at: c.at }));
+    .map(([id, c]) => ({ id, src: state.byId.get(id)?.src, title: state.byId.get(id)?.title, scenes: c.s, memo: c.memo?.trim() || undefined, at: c.at }));
 }
 function sendCuration() {
   const items = unsentItems();
@@ -540,7 +548,7 @@ function renderPlayer() {
   const t = current();
   $('.video').classList.toggle('has-track', !!t);
   $('#nowTitle').textContent = t ? t.title : '—';
-  $('#nowSub').textContent = t ? [t.subtitle, t.genre].filter(Boolean).join(' · ') : 'まだ再生していません';
+  $('#nowSub').textContent = t ? [t.subtitle, t.genre, t.composer, sourceOf(t).name].filter(Boolean).join(' · ') : 'まだ再生していません';
   $('#nowTags').innerHTML = t
     ? t.tags.filter((x) => !GENERIC_TAGS.has(x)).map((x) => `<button class="chip" data-tag="${esc(x)}">#${esc(x)}</button>`).join('')
     : '';
@@ -558,8 +566,8 @@ function renderPlayer() {
   $('#similarBtn').disabled = !t;
   const credit = $('#credit');
   if (t) {
-    credit.href = `https://maou.audio/${t.id}/`;
-    credit.textContent = '魔王魂で曲ページを開く ↗';
+    credit.href = sourceOf(t).page(t);
+    credit.textContent = `${sourceOf(t).name}で曲ページを開く ↗`;
   } else {
     credit.removeAttribute('href');
     credit.textContent = '';
@@ -618,6 +626,11 @@ function renderSearch() {
             </button>` : '').join('')}
         </div>
       </div>` : ''}
+    ${loadedSources().length > 1 ? `
+    <div class="section">
+      <div class="section-head"><h2>収録元</h2></div>
+      <div class="chips">${loadedSources().map((x) => `<button class="chip ${f.srcs.has(x.key) ? 'on' : ''}" data-action="src" data-v="${x.key}">${esc(x.name)}<small>${x.count}</small></button>`).join('')}</div>
+    </div>` : ''}
     <div class="section">
       <div class="section-head"><h2>ジャンル</h2></div>
       <div class="chips">${genres.map((g) => `<button class="chip ${f.genres.has(g) ? 'on' : ''}" data-action="genre" data-v="${esc(g)}">${esc(g)}</button>`).join('')}</div>
@@ -794,7 +807,7 @@ function bind() {
   $('#nowTags').onclick = (e) => {
     const b = e.target.closest('[data-tag]');
     if (!b) return;
-    state.filter = { q: '', genres: new Set(), tags: new Set([b.dataset.tag]) };
+    state.filter = { q: '', genres: new Set(), tags: new Set([b.dataset.tag]), srcs: new Set() };
     state.tab = 'search';
     state.shown = 50;
     render();
@@ -850,15 +863,16 @@ function bind() {
         break;
       }
       case 'genre':
-      case 'tag': {
-        const set = action === 'genre' ? f.genres : f.tags;
+      case 'tag':
+      case 'src': {
+        const set = { genre: f.genres, tag: f.tags, src: f.srcs }[action];
         set.has(v) ? set.delete(v) : set.add(v);
         state.shown = 50;
         renderView();
         break;
       }
       case 'toggle-tags': state.tagsOpen = !state.tagsOpen; renderView(); break;
-      case 'clear-filter': state.filter = { q: '', genres: new Set(), tags: new Set() }; renderView(); break;
+      case 'clear-filter': state.filter = { q: '', genres: new Set(), tags: new Set(), srcs: new Set() }; renderView(); break;
       case 'more': state.shown += 50; renderView(); break;
       case 'play-results': setQueue(filtered().map((t) => t.id), null, { label: '検索結果' }); break;
       case 'row': {
@@ -955,20 +969,31 @@ function bind() {
   }, { threshold: 0.15 }).observe($('#player'));
 }
 
+function loadedSources() {
+  return SOURCES.map((x) => ({ ...x, count: state.tracks.filter((t) => t.src === x.key).length })).filter((x) => x.count);
+}
+
 // ---------- 起動 ----------
 async function main() {
   renderTheme();
   bind();
-  try {
-    const res = await fetch('data/maou.json');
-    const data = await res.json();
-    // 現段階では YouTube 動画のある曲のみ扱う
-    state.tracks = data.tracks.filter((t) => t.yt);
-  } catch {
+  // 収録元ごとのデータを並行して読み込む（未生成のものは飛ばす）
+  const loaded = await Promise.all(SOURCES.map(async (src) => {
+    try {
+      const res = await fetch(src.file);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return data.tracks.filter((t) => t.yt).map((t) => ({ ...t, src: src.key }));
+    } catch { return []; }
+  }));
+  const all = loaded.flat();
+  if (!all.length) {
     $('#view').innerHTML = '<p class="empty">曲データを読み込めませんでした</p>';
     return;
   }
-  for (const t of state.tracks) state.byId.set(t.id, t);
+  for (const t of all) state.byId.set(t.id, t);
+  // 同じ曲の別バージョン（OpenTracks の #2 など）は一覧・場面に出さず、代表だけを扱う
+  state.tracks = all.filter((t) => t.primary !== false);
   const q = state.queue;
   q.items = q.items.filter((id) => state.byId.has(id));
   q.orig = (q.orig || q.items).filter((id) => state.byId.has(id));

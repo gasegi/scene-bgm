@@ -13,9 +13,22 @@
 - 再生は **YouTube 公式動画の埋め込み** のみ。素材サイトの音源ファイルには直接アクセスしない
   （OpenTracks・甘茶の音楽工房は直リンク禁止、魔王魂はサーバー側で直リンクを拒否しているため）
 - アプリは実行中に素材サイトのサーバーへアクセスしない。曲情報は `data/*.json` に同梱
-- 現在の収録：魔王魂のBGM（YouTube動画のある360曲）
+- 収録：魔王魂のBGM（YouTube動画のある360曲）、OpenTracks（旧DOVA-SYNDROME）公式YouTubeチャンネルの楽曲
 
 ## 曲情報の更新
+
+### OpenTracks など（YouTube公式チャンネル）
+
+`data/sources.json` に並べたチャンネルを、GitHub Actions（`.github/workflows/update-catalog.yml`）が週1回 YouTube Data API で取り直す。
+APIキーはリポジトリの Secrets `YOUTUBE_API_KEY`。手動実行は Actions タブの update-catalog → Run workflow。
+
+```bash
+node scripts/fetch-youtube.mjs --rss
+```
+
+APIキーなしで最新15件だけ取得する（解析の確認用）。
+
+### 魔王魂
 
 ```bash
 node scripts/build-catalog.mjs
