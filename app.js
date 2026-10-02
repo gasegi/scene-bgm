@@ -45,23 +45,68 @@ const ICON = {
 // ---------- 場面プリセット ----------
 // tags / genres のいずれかに当たるか、サブタイトル・説明文に kw を含めば該当
 const SCENES = [
-  { key: 'bright', name: '明るい・元気', c: ['#ff9a3c', '#ff5f6d'], tags: ['明るい', '元気', 'かわいい', '爽やか', '楽しい', 'コミカル'], kw: ['明る', '元気', '楽し', 'ポップ'] },
+  { key: 'bright', name: '明るい・元気', c: ['#ff9a3c', '#ff5f6d'], tags: ['明るい', '元気', 'かわいい', '可愛い', '爽やか', '楽しい'], kw: ['明る', '元気', '楽し', 'ポップ'] },
+  { key: 'hope', name: '前向き・希望', c: ['#fbbf24', '#f97316'], tags: ['希望', '爽やか', '力強い', '情熱'], kw: ['希望', '前向き', '旅立ち'] },
   { key: 'daily', name: 'ほのぼの日常', c: ['#5fc88f', '#2f9e8f'], tags: ['穏やか', 'カフェ', '故郷', '店内', '動物', '猫', '犬', '日常', '温かい', '優しい', 'のんびり', 'ほのぼの'], kw: ['ほのぼの', 'のんびり', '日常', 'ゆったり'] },
+  { key: 'comic', name: 'コミカル', c: ['#f472b6', '#a855f7'], need: 1, tags: ['コメディー', 'コミカル'], kw: ['コミカル', 'ギャグ', 'おどけ', 'ドタバタ'] },
   { key: 'sad', name: '切ない・感動', c: ['#6a8dff', '#8457d6'], tags: ['切ない', '悲しみ', '悲しい', '別れ', '寂しい', '回想', '夕日', '懐かしい', '感動'], kw: ['切な', '悲し', '感動', '泣'] },
-  { key: 'tense', name: '緊張・シリアス', c: ['#4b5563', '#1f2937'], tags: ['推理', '探偵', '悪の組織', '暗い', '苦悩', '緊張感', '緊迫', '怪しい', '不安'], kw: ['緊張', '緊迫', 'シリアス', '厳戒', '不安'] },
+  { key: 'tense', name: '緊張・シリアス', c: ['#4b5563', '#1f2937'], tags: ['悪の組織', '暗い', '苦悩', '緊張感', '緊迫', 'シリアス', '不安'], kw: ['緊張', '緊迫', 'シリアス', '厳戒', '不安'] },
+  { key: 'mystery', name: 'ミステリー・不思議', c: ['#0ea5e9', '#1e3a8a'], tags: ['不思議', '怪しい', '推理', '探偵', '謎'], kw: ['謎', '推理', 'ミステリ', '不思議'] },
   { key: 'battle', name: 'バトル・熱い', c: ['#ef4444', '#991b1b'], tags: ['戦闘曲', 'メタル', 'ラウド', 'アクション', '激しい', '力強い', '情熱', 'かっこいい'], kw: ['バトル', '戦闘', '熱い', '激し'] },
-  { key: 'epic', need: 1, name: '壮大・荘厳', c: ['#c9a227', '#7a5a12'], tags: ['壮大', '荘厳', '儀式', '城', 'フルオーケストラ', '勇壮'], genres: ['オーケストラ'] },
+  { key: 'epic', name: '壮大・荘厳', c: ['#c9a227', '#7a5a12'], need: 1, tags: ['壮大', '荘厳', '儀式', '城', 'フルオーケストラ', '勇壮'], genres: ['オーケストラ'] },
   { key: 'horror', name: 'ホラー・不穏', c: ['#3f3f46', '#450a0a'], tags: ['ホラー', '不気味', '絶望', '恐ろしい', '悪意', '狂気'], kw: ['恐怖', '不穏', '怖'] },
-  { key: 'fantasy', need: 1, name: '幻想・神秘', c: ['#22d3ee', '#6366f1'], tags: ['幻想的', '神秘的', 'ファンタジー'], genres: ['ファンタジー'], kw: ['幻想', '神秘'] },
-  { key: 'healing', need: 1, name: '癒し・作業用', c: ['#86c5a9', '#4b8f8c'], tags: ['リラックス', 'ヒーリング', '癒し'], genres: ['ヒーリング'], kw: ['癒', 'ヒーリング'] },
-  { key: 'jazz', name: 'オシャレ・ジャズ', c: ['#d4a373', '#7f5539'], tags: ['オシャレ', 'ジャズ', 'カフェ', 'お洒落', 'おしゃれ', 'ボサノバ'], kw: ['ジャズ', 'おしゃれ', 'オシャレ'] },
-  { key: 'wafu', need: 1, name: '和風', c: ['#e05d5d', '#7c2d12'], tags: ['和風'], kw: ['和風', '和楽器', '江戸', '侍', '忍'] },
-  { key: 'cyber', name: 'サイバー・近未来', c: ['#06b6d4', '#7c3aed'], tags: ['未来', '宇宙', 'サイバー', 'デジタル', '近未来', 'EDM', 'テクノ'], genres: ['サイバー'] },
-  { key: 'retro', need: 1, name: 'レトロゲーム', c: ['#84cc16', '#15803d'], tags: ['ピコピコ音', 'チップチューン', '8bit'], genres: ['ファミコン風'] },
-  { key: 'rock', need: 1, name: 'ロック', c: ['#f97316', '#1f2937'], tags: ['ロック', 'メタル'], genres: ['ネオロック'] },
-  { key: 'piano', need: 1, name: 'ピアノ', c: ['#a78bfa', '#475569'], tags: ['ピアノ'], genres: ['ピアノ'] },
-  { key: 'acoustic', need: 1, name: 'アコースティック', c: ['#eab308', '#a16207'], tags: ['A.ギター'], genres: ['アコースティック'] },
+  { key: 'fantasy', name: '幻想・神秘', c: ['#22d3ee', '#6366f1'], need: 1, tags: ['幻想的', '神秘的', 'ファンタジー'], genres: ['ファンタジー'], kw: ['幻想', '神秘'] },
+  { key: 'healing', name: '癒し・作業用', c: ['#86c5a9', '#4b8f8c'], need: 1, tags: ['リラックス', 'ヒーリング', '癒し'], genres: ['ヒーリング'], kw: ['癒', 'ヒーリング'] },
+  { key: 'jazz', name: 'オシャレ・カフェ', c: ['#d4a373', '#7f5539'], tags: ['オシャレ', 'ジャズ', 'カフェ', 'お洒落', 'おしゃれ', 'ボサノバ'], kw: ['ジャズ', 'おしゃれ', 'オシャレ', 'カフェ'] },
+  { key: 'wafu', name: '和風', c: ['#e05d5d', '#7c2d12'], need: 1, tags: ['和風'], kw: ['和風', '和楽器', '江戸', '侍', '忍'] },
+  { key: 'cyber', name: 'SF・近未来', c: ['#06b6d4', '#7c3aed'], tags: ['未来', '宇宙', 'サイバー', 'デジタル', '近未来'], genres: ['サイバー'], kw: ['未来', '宇宙', 'SF'] },
 ];
+
+// ---------- ジャンル・楽器・テンポ（絞り込み用） ----------
+// ジャンル：曲のジャンルか、同名のキーワードを持っていれば該当（複数選択はいずれか）
+const GENRE_NAMES = ['ポップ', 'ロック', 'メタル', 'クラシック', 'オーケストラ', 'アコースティック', 'アンビエント', 'ヒーリング', 'デジタル', 'EDM',
+  'サイバー', 'ジャズ', 'ボサノバ', 'ファンク', 'ブルース', 'カントリー', '和風', '民族音楽', '8bit・レトロ'];
+const GENRE_ALIAS = { 'ネオロック': 'ロック', 'ファミコン風': '8bit・レトロ', '民族系': '民族音楽', 'ピコピコ音': '8bit・レトロ' };
+// 楽器：表示名 → 元のキーワード（複数選択はすべてに一致）
+const INSTRUMENTS = {
+  'ピアノ': ['ピアノ', '歌ものピアノver'],
+  'アコギ': ['A.ギター', 'アコースティックギター'],
+  'エレキギター': ['E.ギター', 'ギター', '高音質ギター', 'ギター生演奏'],
+  'ベース': ['E.ベース', 'A.ベース', 'ベース', 'スラップベース'],
+  'ドラム': ['ドラム'],
+  '打楽器': ['パーカッション', '旋律打楽器', 'その他打楽器'],
+  'シンセ': ['シンセリード', 'シンセパッド', 'シンセドラム', 'その他シンセ'],
+  '弦楽器': ['弦楽器-高', '弦楽器-低', 'ストリングス', 'バイオリン'],
+  '木管楽器': ['木管楽器-高', '木管楽器-低'],
+  '金管楽器': ['金管楽器-高', '金管楽器-低'],
+  'オルガン': ['オルガン'],
+  '民族楽器': ['民族楽器', '三味線'],
+  'ボーカル・コーラス': ['ボーカル', 'コーラス', '声入り'],
+};
+// テンポ：表示名 → 元のキーワード（複数選択はいずれか）
+const TEMPOS = {
+  'ゆっくり': ['遅い', '一部遅い', '鈍重'],
+  '普通': ['普通の速さ'],
+  '軽快': ['軽快'],
+  '速い': ['速い', '一部速い'],
+};
+// 雰囲気タグの一覧から外すキーワード（ジャンル・楽器・テンポ・拍子など）
+const FACET_WORDS = new Set([...GENRE_NAMES, ...Object.keys(GENRE_ALIAS), ...Object.values(INSTRUMENTS).flat(), ...Object.values(TEMPOS).flat(),
+  'その他鍵盤', 'その他の楽器', '四拍子', '三拍子', '変拍子', '三連符', 'スイング', 'フリー', 'ノイズ', 'オーケストラロック', '民族曲にまさかのエレキベース']);
+
+// 読み込み時に、曲ごとのジャンル・楽器・テンポを求めておく
+function deriveFacets(t) {
+  if (t.src === 'maou') {
+    t.genre = GENRE_ALIAS[t.genre] ?? (t.genre === 'ピアノ' ? 'その他' : t.genre);
+    // 魔王魂の「ピアノ」ジャンルはピアノ曲なので楽器として扱う
+    if (t.genre === 'その他' || t.tags.includes('ピアノ')) t.tags = [...new Set([...t.tags, 'ピアノ'])];
+  }
+  const words = new Set([t.genre, ...t.tags]);
+  t.genres = new Set([...words].map((w) => GENRE_ALIAS[w] ?? w).filter((w) => GENRE_NAMES.includes(w)));
+  t.insts = new Set(Object.entries(INSTRUMENTS).filter(([, ws]) => ws.some((w) => words.has(w))).map(([k]) => k));
+  t.tempos = new Set(Object.entries(TEMPOS).filter(([, ws]) => ws.some((w) => words.has(w))).map(([k]) => k));
+}
+
 
 // 曲の性格を表さない汎用タグ。タグ一覧や類似度計算から外す
 const GENERIC_TAGS = new Set(['ゲーム', 'アニメ', 'YouTube', 'rpg', '映画・ドラマ', '古い曲', 'midi', '演劇', 'ラジオ', 'ドラマ', 'シネマ', '四拍子', '三拍子']);
@@ -81,7 +126,7 @@ const state = {
   favs: store.get('favs', []), // [{id, at}]
   history: store.get('history', []), // [{id, at}] 新しい順
   settings: Object.assign({ theme: 'auto', shuffle: true, repeat: 'all', volume: 40, muted: false }, store.get('settings', {})),
-  filter: { q: '', genres: new Set(), tags: new Set(), srcs: new Set() },
+  filter: null, // emptyFilter() で初期化
   tab: 'search',
   shown: 50,
   tagsOpen: false,
@@ -149,15 +194,19 @@ function matchScene(t, sc) {
   return !!sc.kw?.some((k) => text.includes(k));
 }
 function filtered() {
-  const { q, genres, tags, srcs } = state.filter;
+  const { q, genres, tags, srcs, insts, tempos } = state.filter;
   const words = q.toLowerCase().split(/[\s　]+/).filter(Boolean);
+  // 収録元・ジャンル・テンポは「いずれか」、楽器・雰囲気タグは「すべて」に一致
   return state.tracks.filter((t) =>
     (!srcs.size || srcs.has(t.src)) &&
-    (!genres.size || genres.has(t.genre)) &&
-    (!tags.size || t.tags.some((x) => tags.has(x))) &&
+    (!genres.size || [...genres].some((g) => t.genres.has(g))) &&
+    (!tempos.size || [...tempos].some((x) => t.tempos.has(x))) &&
+    [...insts].every((x) => t.insts.has(x)) &&
+    [...tags].every((x) => t.tags.includes(x)) &&
     words.every((w) => haystack(t).includes(w)));
 }
-const hasFilter = () => state.filter.q.trim() || state.filter.genres.size || state.filter.tags.size || state.filter.srcs.size;
+const emptyFilter = (tags = []) => ({ q: '', genres: new Set(), tags: new Set(tags), srcs: new Set(), insts: new Set(), tempos: new Set() });
+const hasFilter = () => { const f = state.filter; return f.q.trim() || f.genres.size || f.tags.size || f.srcs.size || f.insts.size || f.tempos.size; };
 
 function similarTo(t, n = 30) {
   const own = t.tags.filter((x) => !GENERIC_TAGS.has(x));
@@ -647,16 +696,34 @@ function renderTabs() {
   }
 }
 
+// 各絞り込み項目の曲数（全曲に対する数。読み込み後は変わらないので一度だけ数える）
+let facetCache = null;
+function facets() {
+  if (facetCache) return facetCache;
+  const count = (fn) => {
+    const m = new Map();
+    for (const t of state.tracks) for (const x of fn(t)) m.set(x, (m.get(x) || 0) + 1);
+    return [...m].sort((a, b) => b[1] - a[1]);
+  };
+  facetCache = {
+    genres: count((t) => t.genres),
+    insts: count((t) => t.insts),
+    tempos: Object.keys(TEMPOS).map((k) => [k, state.tracks.filter((t) => t.tempos.has(k)).length]).filter(([, n]) => n),
+    tags: count((t) => t.tags.filter((x) => !GENERIC_TAGS.has(x) && !FACET_WORDS.has(x))).filter(([, n]) => n >= 3),
+  };
+  return facetCache;
+}
+
 function sceneCount(sc) {
   return sc._n ??= state.tracks.filter((t) => matchScene(t, sc)).length;
 }
 
 function renderSearch() {
   const f = state.filter;
-  const genres = [...new Set(state.tracks.map((t) => t.genre))];
-  const tagCount = new Map();
-  for (const t of state.tracks) for (const x of t.tags) if (!GENERIC_TAGS.has(x)) tagCount.set(x, (tagCount.get(x) || 0) + 1);
-  const tags = [...tagCount].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
+  const facetCounts = facets();
+  const tags = facetCounts.tags;
+  const chipGroup = (action, entries, set) => entries.map(([x, n]) =>
+    `<button class="chip ${set.has(x) ? 'on' : ''}" data-action="${action}" data-v="${esc(x)}">${esc(x)}<small>${n}</small></button>`).join('');
   const active = hasFilter();
   const res = active ? filtered() : [];
 
@@ -684,13 +751,21 @@ function renderSearch() {
       <div class="chips">${loadedSources().map((x) => `<button class="chip ${f.srcs.has(x.key) ? 'on' : ''}" data-action="src" data-v="${x.key}">${esc(x.name)}<small>${x.count}</small></button>`).join('')}</div>
     </div>` : ''}
     <div class="section">
-      <div class="section-head"><h2>ジャンル</h2></div>
-      <div class="chips">${genres.map((g) => `<button class="chip ${f.genres.has(g) ? 'on' : ''}" data-action="genre" data-v="${esc(g)}">${esc(g)}</button>`).join('')}</div>
+      <div class="section-head"><h2>ジャンル</h2><span class="note">いずれか</span></div>
+      <div class="chips">${chipGroup('genre', facetCounts.genres, f.genres)}</div>
     </div>
     <div class="section">
-      <div class="section-head"><h2>雰囲気・用途タグ</h2>
+      <div class="section-head"><h2>楽器</h2><span class="note">すべてを含む</span></div>
+      <div class="chips">${chipGroup('inst', facetCounts.insts, f.insts)}</div>
+    </div>
+    <div class="section">
+      <div class="section-head"><h2>テンポ</h2><span class="note">いずれか</span></div>
+      <div class="chips">${chipGroup('tempo', facetCounts.tempos, f.tempos)}</div>
+    </div>
+    <div class="section">
+      <div class="section-head"><h2>雰囲気・用途タグ</h2><span class="note">すべてを含む</span>
         <button class="link" data-action="toggle-tags">${state.tagsOpen ? '閉じる' : 'すべて表示'}</button></div>
-      <div class="chips ${state.tagsOpen ? '' : 'collapsed'}">${tags.map(([x, n]) => `<button class="chip ${f.tags.has(x) ? 'on' : ''}" data-action="tag" data-v="${esc(x)}">${esc(x)}<small>${n}</small></button>`).join('')}</div>
+      <div class="chips ${state.tagsOpen ? '' : 'collapsed'}">${chipGroup('tag', tags, f.tags)}</div>
     </div>
     ${active ? `
       <ul class="list" data-list="results">${res.slice(0, state.shown).map((t, i) => trackRow(t, { idx: i, current: t.id === current()?.id })).join('') || ''}</ul>
@@ -859,7 +934,7 @@ function bind() {
   $('#nowTags').onclick = (e) => {
     const b = e.target.closest('[data-tag]');
     if (!b) return;
-    state.filter = { q: '', genres: new Set(), tags: new Set([b.dataset.tag]), srcs: new Set() };
+    state.filter = emptyFilter([b.dataset.tag]);
     state.tab = 'search';
     state.shown = 50;
     render();
@@ -939,15 +1014,17 @@ function bind() {
       }
       case 'genre':
       case 'tag':
-      case 'src': {
-        const set = { genre: f.genres, tag: f.tags, src: f.srcs }[action];
+      case 'src':
+      case 'inst':
+      case 'tempo': {
+        const set = { genre: f.genres, tag: f.tags, src: f.srcs, inst: f.insts, tempo: f.tempos }[action];
         set.has(v) ? set.delete(v) : set.add(v);
         state.shown = 50;
         renderView();
         break;
       }
       case 'toggle-tags': state.tagsOpen = !state.tagsOpen; renderView(); break;
-      case 'clear-filter': state.filter = { q: '', genres: new Set(), tags: new Set(), srcs: new Set() }; renderView(); break;
+      case 'clear-filter': state.filter = emptyFilter(); renderView(); break;
       case 'more': state.shown += 50; renderView(); break;
       case 'play-results': setQueue(filtered().map((t) => t.id), null, { label: '検索結果' }); break;
       case 'row': {
@@ -1069,6 +1146,7 @@ function loadedSources() {
 
 // ---------- 起動 ----------
 async function main() {
+  state.filter = emptyFilter();
   renderTheme();
   bind();
   // 収録元ごとのデータを並行して読み込む（未生成のものは飛ばす）
@@ -1085,7 +1163,10 @@ async function main() {
     $('#view').innerHTML = '<p class="empty">曲データを読み込めませんでした</p>';
     return;
   }
-  for (const t of all) state.byId.set(t.id, t);
+  for (const t of all) {
+    deriveFacets(t);
+    state.byId.set(t.id, t);
+  }
   // 同じ曲の別バージョン（OpenTracks の #2 など）は一覧・場面に出さず、代表だけを扱う
   state.tracks = all.filter((t) => t.primary !== false);
   const q = state.queue;
