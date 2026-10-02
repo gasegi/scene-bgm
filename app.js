@@ -255,6 +255,8 @@ function cycleRepeat() {
   const s = state.settings;
   s.repeat = order[(order.indexOf(s.repeat) + 1) % order.length];
   save.settings();
+  // 1曲リピートに切り替えたとき、enqueue済みの次曲をクリアするため現在曲を再cue
+  if (s.repeat === 'one' && yt.ready && current()) loadCurrent(state.playing);
   toast({ all: 'リピート：全曲', one: 'リピート：1曲', off: 'リピート：オフ' }[s.repeat]);
   renderPlayer();
 }
@@ -305,6 +307,66 @@ function loadCurrent(autoplay) {
   yt.logged = false;
   if (autoplay) yt.player.loadVideoById({ videoId: t.yt });
   else yt.player.cueVideoById({ videoId: t.yt, startSeconds: store.get('pos', 0) });
+  syncUpcoming();
+}
+
+// PiP生存対策：次曲をプレイヤー内部プレイリストにenqueueし、曲遷移をプレイヤー内部完結させる
+// （loadVideoByIdでの差し替えはvideo要素が作り直されiOSではPiPが切れる）
+const ENQUEUE_BUFFER = 10;
+function upcomingTracks(n) {
+  const q = state.queue;
+  const out = [];
+  const wrap = state.settings.repeat === 'all';
+  for (let step = 1; step <= Math.min(n, q.items.length - 1); step++) {
+    let i = q.index + step;
+    if (i >= q.items.length) {
+      if (!wrap) break;
+      i -= q.items.length;
+    }
+    const t = state.byId.get(q.items[i]);
+    if (t) out.push(t);
+  }
+  return out;
+}
+function syncUpcoming() {
+  if (!yt.ready || !current() || state.settings.repeat === 'one') return;
+  let have = 0;
+  try {
+    const pl = yt.player.getPlaylist?.() || [];
+    have = pl.length - (yt.player.getPlaylistIndex?.() ?? 0) - 1;
+  } catch {}
+  for (const t of upcomingTracks(ENQUEUE_BUFFER - Math.max(0, have))) yt.player.enqueueVideo?.(t.yt);
+}
+function playingVideoId() {
+  try {
+    const m = (yt.player.getVideoUrl?.() || '').match(/[?&]v=([\w-]+)/);
+    if (m) return m[1];
+    const id = yt.player.getPlaylist?.()?.[yt.player.getPlaylistIndex?.()];
+    if (id) return id;
+  } catch {}
+  return null;
+}
+function handleEnded() {
+  const q = state.queue;
+  if (state.settings.repeat === 'one') { yt.seek(0); yt.play(); return; }
+  let nextIdx = q.index + 1;
+  if (nextIdx >= q.items.length) nextIdx = state.settings.repeat === 'all' ? 0 : -1;
+  const nt = nextIdx >= 0 ? state.byId.get(q.items[nextIdx]) : null;
+  if (!nt) { state.playing = false; renderPlayer(); return; }
+  if (nt.yt === current()?.yt) { yt.seek(0); yt.play(); return; }
+  if (playingVideoId() === nt.yt) {
+    // プレイヤーが内部で既に次曲へ進んでいる。再読み込みせず位置だけ同期してPiPを保つ
+    q.index = nextIdx;
+    save.queue();
+    yt.logged = false;
+    syncUpcoming();
+    render();
+  } else {
+    q.index = nextIdx;
+    save.queue();
+    loadCurrent(true);
+    render();
+  }
 }
 
 function initYouTube() {
@@ -327,8 +389,7 @@ function initYouTube() {
           } else if (e.data === S.PAUSED) {
             state.playing = false;
           } else if (e.data === S.ENDED) {
-            if (state.settings.repeat === 'one') { yt.seek(0); yt.play(); }
-            else next(true);
+            handleEnded();
             return;
           }
           renderPlayer();
