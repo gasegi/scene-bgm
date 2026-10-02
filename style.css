@@ -46,6 +46,8 @@
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
+/* ダブルタップでの拡大を無効化（ピンチでの拡大は残す） */
+html, body, button, a, input, textarea, [data-action] { touch-action: manipulation; }
 body {
   margin: 0;
   background: var(--bg);
@@ -276,5 +278,5 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 .dlg { padding: 20px; display: grid; gap: 12px; }
 .dlg h3 { margin: 0; font-size: 17px; }
 .dlg p { margin: 0; font-size: 13px; }
-.dlg textarea { width: 100%; font: 12px/1.4 ui-monospace, monospace; background: var(--bg-sunk); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.dlg textarea { width: 100%; font: 16px/1.4 ui-monospace, monospace; background: var(--bg-sunk); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
 .dlg-actions { display: flex; justify-content: flex-end; gap: 8px; }
