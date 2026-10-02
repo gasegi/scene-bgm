@@ -37,6 +37,8 @@ const ICON = {
   auto: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>',
   download: '<svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>',
   upload: '<svg viewBox="0 0 24 24"><path d="M12 21V9M7 14l5-5 5 5M5 3h14"/></svg>',
+  vol: '<svg viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>',
+  volMute: '<svg viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg>',
   copy: '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
 };
 
@@ -78,7 +80,7 @@ const state = {
   queue: store.get('queue', { items: [], orig: [], index: -1 }),
   favs: store.get('favs', []), // [{id, at}]
   history: store.get('history', []), // [{id, at}] 新しい順
-  settings: Object.assign({ theme: 'auto', shuffle: true, repeat: 'all' }, store.get('settings', {})),
+  settings: Object.assign({ theme: 'auto', shuffle: true, repeat: 'all', volume: 40, muted: false }, store.get('settings', {})),
   filter: { q: '', genres: new Set(), tags: new Set(), srcs: new Set() },
   tab: 'search',
   shown: 50,
@@ -483,6 +485,7 @@ function initYouTube() {
       events: {
         onReady: () => {
           yt.ready = true;
+          applyVolume();
           if (current()) loadCurrent(false);
         },
         onStateChange: (e) => {
@@ -536,7 +539,44 @@ setInterval(() => {
     lastSave = Date.now();
     store.set('pos', { id: current().id, t: Math.floor(t) });
   }
+  syncVolumeFromPlayer();
 }, 500);
+
+// ---------- 音量 ----------
+// iOS はページから音量を変えられない（本体ボタンのみ）ので、音量欄を出さない
+const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+let volDragging = false;
+let volChangedAt = 0; // 直後はプレイヤーの報告が古い値のことがあるため同期しない
+
+function applyVolume() {
+  if (!yt.ready) return;
+  volChangedAt = Date.now();
+  const s = state.settings;
+  yt.player.setVolume?.(s.volume);
+  if (s.muted) yt.player.mute?.();
+  else yt.player.unMute?.();
+}
+// YouTube 側の操作で音量が変わった場合もこちらに反映
+function syncVolumeFromPlayer() {
+  if (IOS || volDragging || Date.now() - volChangedAt < 1500 || !yt.player?.getVolume) return;
+  const s = state.settings;
+  const v = yt.player.getVolume();
+  const m = yt.player.isMuted();
+  if (v !== s.volume || m !== s.muted) {
+    s.volume = v;
+    s.muted = m;
+    save.settings();
+    renderVolume();
+  }
+}
+function renderVolume() {
+  const s = state.settings;
+  $('#volume').hidden = IOS;
+  $('#vol').value = s.muted ? 0 : s.volume;
+  $('#volNum').textContent = s.muted ? '0' : s.volume;
+  $('#muteBtn').innerHTML = s.muted || s.volume === 0 ? ICON.volMute : ICON.vol;
+  $('#muteBtn').classList.toggle('on', s.muted);
+}
 
 // ---------- 描画 ----------
 function trackRow(t, { idx, mode = 'list', current: cur = false, meta } = {}) {
@@ -562,7 +602,7 @@ function renderPlayer() {
   $('#nowTitle').textContent = t ? t.title : '—';
   $('#nowSub').textContent = t ? [t.subtitle, t.genre, t.composer, sourceOf(t).name].filter(Boolean).join(' · ') : 'まだ再生していません';
   $('#nowTags').innerHTML = t
-    ? t.tags.filter((x) => !GENERIC_TAGS.has(x)).map((x) => `<button class="chip" data-tag="${esc(x)}">#${esc(x)}</button>`).join('')
+    ? t.tags.filter((x) => !GENERIC_TAGS.has(x)).slice(0, 8).map((x) => `<button class="chip" data-tag="${esc(x)}">#${esc(x)}</button>`).join('')
     : '';
   const fav = t && isFav(t.id);
   for (const el of [$('#nowFav'), $('#miniFav')]) {
@@ -832,6 +872,29 @@ function bind() {
     renderTheme();
   };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', renderTheme);
+
+  renderVolume();
+  const vol = $('#vol');
+  vol.addEventListener('input', () => {
+    volDragging = true;
+    const s = state.settings;
+    s.volume = +vol.value;
+    s.muted = s.volume === 0;
+    applyVolume();
+    renderVolume();
+  });
+  vol.addEventListener('change', () => {
+    save.settings();
+    volDragging = false;
+  });
+  $('#muteBtn').onclick = () => {
+    const s = state.settings;
+    s.muted = !s.muted;
+    if (!s.muted && s.volume === 0) s.volume = 40;
+    save.settings();
+    applyVolume();
+    renderVolume();
+  };
 
   const seek = $('#seek');
   seek.addEventListener('input', () => {
