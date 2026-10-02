@@ -43,22 +43,22 @@ const ICON = {
 // ---------- 場面プリセット ----------
 // tags / genres のいずれかに当たるか、サブタイトル・説明文に kw を含めば該当
 const SCENES = [
-  { name: '明るい・元気', c: ['#ff9a3c', '#ff5f6d'], tags: ['明るい', '元気', 'かわいい', '爽やか', '楽しい'], kw: ['明る', '元気', '楽し', 'ポップ'] },
-  { name: 'ほのぼの日常', c: ['#5fc88f', '#2f9e8f'], tags: ['穏やか', 'カフェ', '故郷', '店内', '動物', '猫', '犬'], kw: ['ほのぼの', 'のんびり', '日常', 'ゆったり'] },
-  { name: '切ない・感動', c: ['#6a8dff', '#8457d6'], tags: ['切ない', '悲しみ', '悲しい', '別れ', '寂しい', '回想', '夕日', '懐かしい'], kw: ['切な', '悲し', '感動', '泣'] },
-  { name: '緊張・シリアス', c: ['#4b5563', '#1f2937'], tags: ['推理', '探偵', '悪の組織', '暗い', '苦悩'], kw: ['緊張', '緊迫', 'シリアス', '厳戒', '不安'] },
-  { name: 'バトル・熱い', c: ['#ef4444', '#991b1b'], tags: ['戦闘曲', 'メタル', 'ラウド', 'アクション'], kw: ['バトル', '戦闘', '熱い', '激し'] },
-  { name: '壮大・荘厳', c: ['#c9a227', '#7a5a12'], tags: ['壮大', '荘厳', '儀式', '城', 'フルオーケストラ'], genres: ['オーケストラ'] },
-  { name: 'ホラー・不穏', c: ['#3f3f46', '#450a0a'], tags: ['ホラー', '不気味', '絶望'], kw: ['恐怖', '不穏', '怖'] },
-  { name: '幻想・神秘', c: ['#22d3ee', '#6366f1'], tags: ['幻想的', '神秘的'], genres: ['ファンタジー'], kw: ['幻想', '神秘'] },
-  { name: '癒し・作業用', c: ['#86c5a9', '#4b8f8c'], tags: ['リラックス'], genres: ['ヒーリング'], kw: ['癒', 'ヒーリング'] },
-  { name: 'オシャレ・ジャズ', c: ['#d4a373', '#7f5539'], tags: ['オシャレ', 'ジャズ', 'カフェ'], kw: ['ジャズ', 'おしゃれ', 'オシャレ'] },
-  { name: '和風', c: ['#e05d5d', '#7c2d12'], tags: ['和風'], kw: ['和風', '和楽器', '江戸', '侍', '忍'] },
-  { name: 'サイバー・近未来', c: ['#06b6d4', '#7c3aed'], tags: ['未来', '宇宙'], genres: ['サイバー'] },
-  { name: 'レトロゲーム', c: ['#84cc16', '#15803d'], tags: ['ピコピコ音'], genres: ['ファミコン風'] },
-  { name: 'ロック', c: ['#f97316', '#1f2937'], genres: ['ネオロック'] },
-  { name: 'ピアノ', c: ['#a78bfa', '#475569'], genres: ['ピアノ'] },
-  { name: 'アコースティック', c: ['#eab308', '#a16207'], genres: ['アコースティック'] },
+  { key: 'bright', name: '明るい・元気', c: ['#ff9a3c', '#ff5f6d'], tags: ['明るい', '元気', 'かわいい', '爽やか', '楽しい'], kw: ['明る', '元気', '楽し', 'ポップ'] },
+  { key: 'daily', name: 'ほのぼの日常', c: ['#5fc88f', '#2f9e8f'], tags: ['穏やか', 'カフェ', '故郷', '店内', '動物', '猫', '犬'], kw: ['ほのぼの', 'のんびり', '日常', 'ゆったり'] },
+  { key: 'sad', name: '切ない・感動', c: ['#6a8dff', '#8457d6'], tags: ['切ない', '悲しみ', '悲しい', '別れ', '寂しい', '回想', '夕日', '懐かしい'], kw: ['切な', '悲し', '感動', '泣'] },
+  { key: 'tense', name: '緊張・シリアス', c: ['#4b5563', '#1f2937'], tags: ['推理', '探偵', '悪の組織', '暗い', '苦悩'], kw: ['緊張', '緊迫', 'シリアス', '厳戒', '不安'] },
+  { key: 'battle', name: 'バトル・熱い', c: ['#ef4444', '#991b1b'], tags: ['戦闘曲', 'メタル', 'ラウド', 'アクション'], kw: ['バトル', '戦闘', '熱い', '激し'] },
+  { key: 'epic', name: '壮大・荘厳', c: ['#c9a227', '#7a5a12'], tags: ['壮大', '荘厳', '儀式', '城', 'フルオーケストラ'], genres: ['オーケストラ'] },
+  { key: 'horror', name: 'ホラー・不穏', c: ['#3f3f46', '#450a0a'], tags: ['ホラー', '不気味', '絶望'], kw: ['恐怖', '不穏', '怖'] },
+  { key: 'fantasy', name: '幻想・神秘', c: ['#22d3ee', '#6366f1'], tags: ['幻想的', '神秘的'], genres: ['ファンタジー'], kw: ['幻想', '神秘'] },
+  { key: 'healing', name: '癒し・作業用', c: ['#86c5a9', '#4b8f8c'], tags: ['リラックス'], genres: ['ヒーリング'], kw: ['癒', 'ヒーリング'] },
+  { key: 'jazz', name: 'オシャレ・ジャズ', c: ['#d4a373', '#7f5539'], tags: ['オシャレ', 'ジャズ', 'カフェ'], kw: ['ジャズ', 'おしゃれ', 'オシャレ'] },
+  { key: 'wafu', name: '和風', c: ['#e05d5d', '#7c2d12'], tags: ['和風'], kw: ['和風', '和楽器', '江戸', '侍', '忍'] },
+  { key: 'cyber', name: 'サイバー・近未来', c: ['#06b6d4', '#7c3aed'], tags: ['未来', '宇宙'], genres: ['サイバー'] },
+  { key: 'retro', name: 'レトロゲーム', c: ['#84cc16', '#15803d'], tags: ['ピコピコ音'], genres: ['ファミコン風'] },
+  { key: 'rock', name: 'ロック', c: ['#f97316', '#1f2937'], genres: ['ネオロック'] },
+  { key: 'piano', name: 'ピアノ', c: ['#a78bfa', '#475569'], genres: ['ピアノ'] },
+  { key: 'acoustic', name: 'アコースティック', c: ['#eab308', '#a16207'], genres: ['アコースティック'] },
 ];
 
 // 曲の性格を表さない汎用タグ。タグ一覧や類似度計算から外す
@@ -77,6 +77,9 @@ const state = {
   shown: 50,
   tagsOpen: false,
   playing: false,
+  // 評価・メモ: { [trackId]: { s: { sceneKey: 1 | -1 }, memo, at, sent } }
+  curation: store.get('curation', {}),
+  curateSent: store.get('curateSent', null), // 送信画面を開いた分 { at, ids }
 };
 const favSet = new Set(state.favs.map((f) => f.id));
 
@@ -85,6 +88,7 @@ const save = {
   favs: () => store.set('favs', state.favs),
   history: () => store.set('history', state.history),
   settings: () => store.set('settings', state.settings),
+  curation: () => store.set('curation', state.curation),
 };
 
 const current = () => state.byId.get(state.queue.items[state.queue.index]);
@@ -261,6 +265,84 @@ function cycleRepeat() {
   renderPlayer();
 }
 
+// ---------- 評価・メモ（URLに ?curate=1 を付けて開くと有効） ----------
+const REPO = 'gasegi/scene-bgm';
+const curating = () => !!state.settings.curate;
+const isUnsent = (c) => c && (!c.sent || c.sent < c.at);
+const hasContent = (c) => c && (c.memo?.trim() || Object.keys(c.s || {}).length);
+
+function updateCuration(id, fn) {
+  const c = state.curation[id] ?? { s: {}, memo: '' };
+  fn(c);
+  c.at = Date.now();
+  if (hasContent(c)) state.curation[id] = c;
+  else delete state.curation[id];
+  save.curation();
+}
+// タップごとに 未評価 → 合う → 合わない → 未評価
+function cycleVote(id, key) {
+  updateCuration(id, (c) => {
+    const v = c.s[key];
+    if (!v) c.s[key] = 1;
+    else if (v === 1) c.s[key] = -1;
+    else delete c.s[key];
+  });
+}
+function unsentItems() {
+  return Object.entries(state.curation)
+    .filter(([, c]) => isUnsent(c))
+    .map(([id, c]) => ({ id, src: 'maou', title: state.byId.get(id)?.title, scenes: c.s, memo: c.memo?.trim() || undefined, at: c.at }));
+}
+function sendCuration() {
+  const items = unsentItems();
+  if (!items.length) return toast('未送信の評価はありません');
+  const payload = JSON.stringify({ app: 'scene-bgm', type: 'curation', v: 1, at: new Date().toISOString(), items }, null, 1);
+  const title = `評価 ${items.length}件 (${new Date().toLocaleDateString('ja-JP')})`;
+  const fence = '```';
+  const body = `<!-- scene-bgm-curation -->\n${fence}json\n${payload}\n${fence}\n`;
+  const base = `https://github.com/${REPO}/issues/new?labels=curation&title=${encodeURIComponent(title)}&body=`;
+  let url = base + encodeURIComponent(body);
+  if (url.length > 7500) {
+    // URLが長すぎる場合はクリップボード経由で本文を渡す
+    navigator.clipboard?.writeText(body);
+    url = base + encodeURIComponent('（クリップボードの内容を貼り付けてください）');
+    toast('内容をコピーしました。本文に貼り付けてください');
+  }
+  state.curateSent = { at: Date.now(), ids: items.map((x) => x.id) };
+  store.set('curateSent', state.curateSent);
+  window.open(url, '_blank', 'noopener');
+  renderView();
+}
+function markSent() {
+  const p = state.curateSent;
+  if (!p) return;
+  for (const id of p.ids) if (state.curation[id]) state.curation[id].sent = p.at;
+  save.curation();
+  state.curateSent = null;
+  store.set('curateSent', null);
+  toast('送信済みにしました');
+  render();
+}
+
+let curateRenderedId = null;
+function renderCurate(force = false) {
+  const el = $('#curate');
+  const t = current();
+  el.hidden = !curating() || !t;
+  if (el.hidden) { curateRenderedId = null; return; }
+  // 入力中のメモを消さないよう、曲が変わったときだけ描き直す
+  if (!force && curateRenderedId === t.id) return;
+  curateRenderedId = t.id;
+  const c = state.curation[t.id] ?? { s: {}, memo: '' };
+  el.innerHTML = `
+    <div class="curate-head"><b>評価・メモ</b><span class="muted">タップ：合う → 合わない → 未評価</span></div>
+    <div class="chips">${SCENES.map((sc) => {
+      const v = c.s[sc.key];
+      return `<button class="chip vote ${v === 1 ? 'good' : v === -1 ? 'bad' : ''}" data-vote="${sc.key}">${v === 1 ? '✓ ' : v === -1 ? '✕ ' : ''}${esc(sc.name)}</button>`;
+    }).join('')}</div>
+    <textarea id="memo" rows="2" placeholder="使いどころ・印象など（音声入力でもOK）">${esc(c.memo)}</textarea>`;
+}
+
 // ---------- お気に入り・履歴 ----------
 function toggleFav(id) {
   if (!id) return;
@@ -306,7 +388,11 @@ function loadCurrent(autoplay) {
   yt.loadedId = t.id;
   yt.logged = false;
   if (autoplay) yt.player.loadVideoById({ videoId: t.yt });
-  else yt.player.cueVideoById({ videoId: t.yt, startSeconds: store.get('pos', 0) });
+  else {
+    // 保存位置は同じ曲のときだけ使う
+    const pos = store.get('pos', null);
+    yt.player.cueVideoById({ videoId: t.yt, startSeconds: pos?.id === t.id ? pos.t : 0 });
+  }
   syncUpcoming();
 }
 
@@ -428,7 +514,7 @@ setInterval(() => {
   }
   if (state.playing && Date.now() - lastSave > 5000) {
     lastSave = Date.now();
-    store.set('pos', Math.floor(t));
+    store.set('pos', { id: current().id, t: Math.floor(t) });
   }
 }, 500);
 
@@ -486,14 +572,17 @@ function renderPlayer() {
     $('#seek').value = 0;
   }
   document.title = t ? `${t.title} — Scene BGM` : 'Scene BGM';
+  renderCurate();
 }
 
 function renderTabs() {
-  const counts = { queue: state.queue.items.length, favs: state.favs.length };
+  $('.tabs').classList.toggle('five', curating());
+  $('[data-tab="curate"]').hidden = !curating();
+  const counts = { queue: state.queue.items.length, favs: state.favs.length, curate: unsentItems().length };
   for (const b of document.querySelectorAll('.tabs button')) {
     const tab = b.dataset.tab;
     b.setAttribute('aria-selected', String(tab === state.tab));
-    const label = { search: 'さがす', queue: 'キュー', history: '履歴', favs: 'お気に入り' }[tab];
+    const label = { search: 'さがす', queue: 'キュー', history: '履歴', favs: 'お気に入り', curate: 'メモ' }[tab];
     b.innerHTML = label + (counts[tab] ? `<span class="count">${counts[tab]}</span>` : '');
   }
 }
@@ -594,11 +683,34 @@ function renderFavs() {
       : '<p class="empty">★を付けた曲がここに並びます。</p>'}`;
 }
 
+function renderCurateTab() {
+  const entries = Object.entries(state.curation)
+    .filter(([id]) => state.byId.has(id))
+    .sort((a, b) => b[1].at - a[1].at);
+  const unsent = entries.filter(([, c]) => isUnsent(c)).length;
+  const name = (k) => SCENES.find((x) => x.key === k)?.name ?? k;
+  return `
+    <div class="toolbar">
+      <button class="pill primary" data-action="send-curation" ${unsent ? '' : 'disabled'}>未送信${unsent}件を送る</button>
+      ${state.curateSent ? '<button class="pill" data-action="mark-sent">送信済みにする</button>' : ''}
+      <span class="spacer"></span>
+      <button class="pill ghost" data-action="export-curation">${ICON.download}書き出し</button>
+    </div>
+    <p class="hint">「送る」でGitHubのIssue作成画面が開きます。送信したら「送信済みにする」を押してください。</p>
+    ${entries.length ? `<ul class="list">${entries.map(([id, c], i) => {
+      const t = state.byId.get(id);
+      const votes = Object.entries(c.s || {}).map(([k, v]) => (v === 1 ? '✓' : '✕') + name(k)).join(' ');
+      const meta = [isUnsent(c) ? '未送信' : '送信済', votes, c.memo].filter(Boolean).join(' · ');
+      return trackRow(t, { idx: i, current: id === current()?.id, meta });
+    }).join('')}</ul>` : '<p class="empty">再生中の曲に評価やメモを付けると、ここに並びます。</p>'}`;
+}
+
 function renderView() {
   const v = $('#view');
   const focused = document.activeElement?.id === 'q';
   const caret = focused ? document.activeElement.selectionStart : null;
-  v.innerHTML = { search: renderSearch, queue: renderQueue, history: renderHistory, favs: renderFavs }[state.tab]();
+  if (state.tab === 'curate' && !curating()) state.tab = 'search';
+  v.innerHTML = { search: renderSearch, queue: renderQueue, history: renderHistory, favs: renderFavs, curate: renderCurateTab }[state.tab]();
   if (focused) {
     const q = $('#q');
     q.focus();
@@ -789,6 +901,16 @@ function bind() {
         navigator.clipboard?.writeText(exportJson()).then(() => toast('クリップボードにコピーしました'), () => toast('コピーできませんでした'));
         break;
       case 'import': $('#importDlg').showModal(); break;
+      case 'send-curation': sendCuration(); break;
+      case 'mark-sent': markSent(); break;
+      case 'export-curation': {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([JSON.stringify({ app: 'scene-bgm', type: 'curation', v: 1, curation: state.curation }, null, 1)], { type: 'application/json' }));
+        a.download = `scene-bgm-curation-${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        break;
+      }
     }
   });
 
@@ -801,6 +923,29 @@ function bind() {
     if (dlg.returnValue === 'ok' && $('#importText').value.trim()) importJson($('#importText').value);
     $('#importText').value = '';
     $('#importFile').value = '';
+  });
+
+  $('#curate').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-vote]');
+    const t = current();
+    if (!b || !t) return;
+    cycleVote(t.id, b.dataset.vote);
+    const memo = $('#memo').value;
+    renderCurate(true);
+    $('#memo').value = memo;
+    renderTabs();
+  });
+  let memoTimer;
+  $('#curate').addEventListener('input', (e) => {
+    if (e.target.id !== 'memo') return;
+    const id = current()?.id;
+    const value = e.target.value;
+    clearTimeout(memoTimer);
+    memoTimer = setTimeout(() => {
+      if (!id) return;
+      updateCuration(id, (c) => { c.memo = value; });
+      renderTabs();
+    }, 400);
   });
 
   // プレイヤーが画面外に出たらミニプレイヤーを表示
@@ -828,7 +973,27 @@ async function main() {
   q.items = q.items.filter((id) => state.byId.has(id));
   q.orig = (q.orig || q.items).filter((id) => state.byId.has(id));
   if (q.index >= q.items.length) q.index = q.items.length - 1;
+  applyUrlParams();
   render();
   initYouTube();
+}
+
+// ?curate=1|0 で評価モードを切り替え、?scene=<key> で場面を読み込む
+function applyUrlParams() {
+  const url = new URL(location.href);
+  const p = url.searchParams;
+  if (p.has('curate')) {
+    state.settings.curate = p.get('curate') !== '0';
+    save.settings();
+    toast(state.settings.curate ? '評価モード：オン' : '評価モード：オフ');
+  }
+  const sc = SCENES.find((x) => x.key === p.get('scene'));
+  if (sc) setQueue(state.tracks.filter((t) => matchScene(t, sc)).map((t) => t.id), null, { autoplay: false, label: sc.name });
+  // 適用済みのパラメータは消し、再読み込みで繰り返さないようにする
+  if (p.has('curate') || p.has('scene')) {
+    p.delete('curate');
+    p.delete('scene');
+    history.replaceState(null, '', url.pathname + (p.toString() ? '?' + p : '') + url.hash);
+  }
 }
 main();
