@@ -89,6 +89,33 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <dialog id="shareDlg">
+    <form method="dialog" class="dlg">
+      <h3 id="shareTitle"></h3>
+      <p class="muted">このURLを開くと、相手の端末で再生やお気に入りへの追加ができます。PCからスマホへはQRコードをカメラで読み取るのが簡単です。</p>
+      <div class="qr" id="shareQr"></div>
+      <input type="text" id="shareUrl" readonly>
+      <div class="dlg-actions">
+        <button value="close" class="pill ghost">閉じる</button>
+        <button type="button" class="pill" id="shareCopy">コピー</button>
+        <button type="button" class="pill primary" id="shareNative">共有…</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="receiveDlg">
+    <form method="dialog" class="dlg">
+      <h3 id="receiveTitle"></h3>
+      <ul class="receive-list" id="receiveList"></ul>
+      <p class="muted" id="receiveNote"></p>
+      <div class="dlg-actions">
+        <button value="close" class="pill ghost">閉じる</button>
+        <button type="button" class="pill" id="receiveFav"></button>
+        <button type="button" class="pill primary" id="receivePlay">再生する</button>
+      </div>
+    </form>
+  </dialog>
+
   <dialog id="importDlg">
     <form method="dialog" class="dlg">
       <h3>お気に入りを読み込む</h3>
@@ -97,7 +124,7 @@
       <textarea id="importText" rows="5" placeholder='{"favs":[...]}'></textarea>
       <div class="dlg-actions">
         <button value="cancel" class="pill ghost">キャンセル</button>
-        <button value="ok" class="pill primary" id="importOk">読み込む</button>
+        <button type="button" class="pill primary" id="importOk">読み込む</button>
       </div>
     </form>
   </dialog>

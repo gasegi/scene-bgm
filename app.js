@@ -39,6 +39,7 @@ const ICON = {
   upload: '<svg viewBox="0 0 24 24"><path d="M12 21V9M7 14l5-5 5 5M5 3h14"/></svg>',
   vol: '<svg viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>',
   volMute: '<svg viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg>',
+  share: '<svg viewBox="0 0 24 24"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v14"/></svg>',
   copy: '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
 };
 
@@ -781,6 +782,7 @@ function renderQueue() {
     <div class="toolbar">
       <span class="muted">${q.index + 1} / ${q.items.length}曲</span>
       <span class="spacer"></span>
+      <button class="pill" data-action="share-queue">${ICON.share}URLで共有</button>
       <button class="pill ghost" data-action="clear-queue">${ICON.x}クリア</button>
     </div>
     <ul class="list">${q.items.map((id, i) => {
@@ -810,11 +812,11 @@ function renderFavs() {
     <div class="toolbar">
       ${favs.length ? `<button class="pill primary" data-action="play-favs">${ICON.playLine}お気に入りを再生</button>` : ''}
       <span class="spacer"></span>
+      ${favs.length ? `<button class="pill" data-action="share-favs">${ICON.share}URLで共有</button>` : ''}
       <button class="pill ghost" data-action="export">${ICON.download}書き出し</button>
-      <button class="pill ghost" data-action="copy">${ICON.copy}コピー</button>
       <button class="pill ghost" data-action="import">${ICON.upload}読み込み</button>
     </div>
-    <p class="hint">お気に入りはこの端末のブラウザに保存されます。別の端末へは「書き出し」→「読み込み」で移せます。</p>
+    <p class="hint">お気に入りはこの端末のブラウザに保存されます。別の端末へは「URLで共有」で開いたリンクやQRコードから取り込めます。</p>
     ${favs.length
       ? `<ul class="list">${favs.map((f, i) => {
           const t = state.byId.get(f.id);
@@ -895,6 +897,100 @@ function importJson(text) {
   save.favs();
   toast(`${added}曲を追加しました`);
   render();
+}
+
+// ---------- URLでの共有 ----------
+// リストは #share=v1.<種別>.<曲トークン.曲トークン...> としてURLのハッシュに入れる（サーバーには送られない）
+// 曲トークン: OpenTracks は "o" + 曲番号の36進数、魔王魂は "m" + "bgm_" を除いたID
+const SHARE_KINDS = { f: 'お気に入り', q: 'プレイリスト' };
+function encodeTrackId(id) {
+  if (id.startsWith('ot_') && /^\d+$/.test(id.slice(3))) return 'o' + (+id.slice(3)).toString(36);
+  if (id.startsWith('bgm_')) return 'm' + id.slice(4);
+  return 'x' + encodeURIComponent(id);
+}
+function decodeTrackId(tok) {
+  const body = tok.slice(1);
+  if (tok[0] === 'o') return 'ot_' + parseInt(body, 36);
+  if (tok[0] === 'm') return 'bgm_' + body;
+  if (tok[0] === 'x') return decodeURIComponent(body);
+  return null;
+}
+function shareUrl(kind, ids) {
+  const url = new URL(location.href);
+  url.search = '';
+  url.hash = `share=v1.${kind}.${ids.map(encodeTrackId).join('.')}`;
+  return url.toString();
+}
+function parseShare(hash) {
+  const m = hash.match(/^#share=v1\.([a-z])\.(.+)$/);
+  if (!m) return null;
+  const ids = m[2].split('.').map(decodeTrackId).filter(Boolean);
+  return { kind: m[1], ids };
+}
+
+let qrLib;
+function loadQr() {
+  qrLib ??= new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+    s.onload = () => resolve(window.qrcode);
+    s.onerror = reject;
+    document.head.append(s);
+  });
+  return qrLib;
+}
+
+async function openShare(kind, ids) {
+  ids = [...new Set(ids)].filter((id) => state.byId.has(id));
+  if (!ids.length) return toast('共有する曲がありません');
+  const url = shareUrl(kind, ids);
+  const dlg = $('#shareDlg');
+  $('#shareTitle').textContent = `${SHARE_KINDS[kind]}（${ids.length}曲）を共有`;
+  $('#shareUrl').value = url;
+  $('#shareNative').hidden = !navigator.share;
+  $('#shareQr').innerHTML = '<p class="muted">QRコードを作成中…</p>';
+  dlg.showModal();
+  try {
+    const qrcode = await loadQr();
+    const qr = qrcode(0, 'L');
+    qr.addData(url);
+    qr.make();
+    $('#shareQr').innerHTML = qr.createSvgTag({ cellSize: 3, margin: 2, scalable: true });
+  } catch {
+    $('#shareQr').innerHTML = '<p class="muted">QRコードを作れませんでした（URLが長すぎるか、読み込みに失敗）</p>';
+  }
+}
+
+// 共有URLで開かれたとき：受け取り画面を出す
+function receiveShare() {
+  const share = parseShare(location.hash);
+  if (!share) return;
+  history.replaceState(null, '', location.pathname + location.search);
+  const ids = share.ids.filter((id) => state.byId.has(id));
+  const missing = share.ids.length - ids.length;
+  if (!ids.length) return toast('共有された曲が見つかりませんでした');
+  const dlg = $('#receiveDlg');
+  dlg._ids = ids;
+  $('#receiveTitle').textContent = `${SHARE_KINDS[share.kind] ?? 'リスト'}（${ids.length}曲）を受け取りました`;
+  $('#receiveNote').textContent = missing ? `${missing}曲は現在の曲データにないため除外しました。` : '';
+  const newFavs = ids.filter((id) => !favSet.has(id)).length;
+  $('#receiveFav').textContent = newFavs ? `お気に入りに追加（新しく${newFavs}曲）` : 'すべてお気に入り済み';
+  $('#receiveFav').disabled = !newFavs;
+  $('#receiveList').innerHTML = ids.slice(0, 8).map((id) => `<li>${esc(state.byId.get(id).title)}</li>`).join('') +
+    (ids.length > 8 ? `<li class="muted">ほか${ids.length - 8}曲</li>` : '');
+  dlg.showModal();
+}
+function addFavs(ids) {
+  let added = 0;
+  const now = Date.now();
+  for (const id of ids) {
+    if (favSet.has(id)) continue;
+    favSet.add(id);
+    state.favs.unshift({ id, at: now });
+    added++;
+  }
+  save.favs();
+  return added;
 }
 
 // ---------- イベント ----------
@@ -1063,9 +1159,8 @@ function bind() {
         setTimeout(() => URL.revokeObjectURL(a.href), 1000);
         break;
       }
-      case 'copy':
-        navigator.clipboard?.writeText(exportJson()).then(() => toast('クリップボードにコピーしました'), () => toast('コピーできませんでした'));
-        break;
+      case 'share-favs': openShare('f', state.favs.map((x) => x.id)); break;
+      case 'share-queue': openShare('q', state.queue.items); break;
       case 'import': $('#importDlg').showModal(); break;
       case 'send-curation': sendCuration(); break;
       case 'mark-sent': markSent(); break;
@@ -1084,12 +1179,13 @@ function bind() {
     const file = e.target.files[0];
     if (file) $('#importText').value = await file.text();
   };
-  $('#importDlg').addEventListener('close', () => {
-    const dlg = $('#importDlg');
-    if (dlg.returnValue === 'ok' && $('#importText').value.trim()) importJson($('#importText').value);
+  $('#importOk').onclick = () => {
+    const text = $('#importText').value.trim();
+    $('#importDlg').close();
+    if (text) importJson(text);
     $('#importText').value = '';
     $('#importFile').value = '';
-  });
+  };
 
   $('#curate').addEventListener('click', (e) => {
     const b = e.target.closest('[data-vote]');
@@ -1113,6 +1209,26 @@ function bind() {
       renderTabs();
     }, 400);
   });
+
+  $('#shareCopy').onclick = () => {
+    navigator.clipboard?.writeText($('#shareUrl').value).then(() => toast('URLをコピーしました'), () => toast('コピーできませんでした'));
+  };
+  $('#shareNative').onclick = () => {
+    navigator.share?.({ title: 'Scene BGM', url: $('#shareUrl').value }).catch(() => {});
+  };
+  $('#shareUrl').onclick = (e) => e.target.select();
+  // dialog の close イベントは環境によって遅れたり届かないことがあるため、ボタンで直接処理する
+  $('#receivePlay').onclick = () => {
+    const dlg = $('#receiveDlg');
+    dlg.close();
+    setQueue(dlg._ids || [], null, { label: '共有されたリスト' });
+  };
+  $('#receiveFav').onclick = () => {
+    const dlg = $('#receiveDlg');
+    dlg.close();
+    toast(`${addFavs(dlg._ids || [])}曲をお気に入りに追加しました`);
+    render();
+  };
 
   // プレイヤーが画面外に出たらミニプレイヤーを表示
   new IntersectionObserver(([entry]) => {
@@ -1174,6 +1290,7 @@ async function main() {
   q.orig = (q.orig || q.items).filter((id) => state.byId.has(id));
   if (q.index >= q.items.length) q.index = q.items.length - 1;
   applyUrlParams();
+  receiveShare();
   render();
   initYouTube();
 }
